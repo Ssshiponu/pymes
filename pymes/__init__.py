@@ -7,7 +7,7 @@ from pymes import MessengerClient, Text, Attachment
 sender = MessengerClient(page_access_token="***")
 
 sender.send(recipient_id="***", message=Text("Hello, world!"))
-sender.send(recipient_id="***", action="mark_seen")
+sender.send("***", action="mark_seen")
 ```"""
 
 from .client import MessengerClient
