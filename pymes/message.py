@@ -53,9 +53,26 @@ class QuickReply(Message):
     def _get_quick_replies(self):
         return [{"content_type": "text", "title": button, "payload": button.upper().replace(" ", "_")} for button in self.buttons]
 
-class Element:
-    """Element for Generic Template"""
-    def __init__(self, title: str, subtitle: str | None = None, image_url: str | None = None, buttons: list[str] | None = None):
+class Button:
+    """Button for Generic Template"""
+    def __init__(self, title: str, type: str = "postback", payload: str | None = None, url: str | None = None):
+        self.type = type
+        self.title = title
+        self.payload = payload
+        self.url = url
+
+        if self.type == "web_url" and not self.url:
+            raise ValueError("Web URL is required for web_url type")
+        if self.type == "postback" and not self.payload:
+            raise ValueError("Payload is required for postback type")
+    
+    def to_dict(self):
+        return {"type": self.type, "title": self.title, "payload": self.payload, "url": self.url}
+
+
+class GenericTemplateElement:   
+    """GElement for Generic Template"""
+    def __init__(self, title: str, subtitle: str | None = None, image_url: str | None = None, buttons: list[Button] | None = None):
         self.title = title
         self.subtitle = subtitle
         self.image_url = image_url
@@ -70,12 +87,12 @@ class Element:
         if self.buttons:
             if len(self.buttons) > 3:
                 raise ValueError("Generic Template can have maximum 3 buttons") 
-            data["buttons"] = [{"type": "postback", "title": button, "payload": button.upper().replace(" ", "_")} for button in self.buttons]
+            data["buttons"] = [b.to_dict() for b in self.buttons]
         return data
 
 class GenericTemplate(Message):
     """Generic template message type"""
-    def __init__(self, elements: list[Element]):
+    def __init__(self, elements: list[GenericTemplateElement]):
         if len(elements) > 10:
             raise ValueError("Generic Template can have maximum 10 elements")
         self.elements = elements

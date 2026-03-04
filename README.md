@@ -38,9 +38,38 @@ sender.send("USER_ID", action="mark_seen")
 - `QuickReply`: Messages with quick reply buttons.
 - `GenericTemplate`: Carousel-like templates with images and buttons.
 
+## Django Support (New)
+
+You can easily handle incoming messages using the `MessengerView`.
+
+```python
+# views.py
+from pymes.adapter.django import MessengerView
+
+class BotView(MessengerView):
+    verify_token = "YOUR_VERIFY_TOKEN"
+    app_id = "YOUR_PAGE_ID" # Optional verification
+
+    def handle_message(self, metadata):
+        sender_id = metadata['sender_id']
+        message = metadata['payload']
+        print(f"Message from {sender_id}: {message}")
+
+    # handle any event defining a method with the event name like handle_{event name}
+    
+
+# urls.py
+from django.urls import path
+from .views import BotView
+
+urlpatterns = [
+    path("webhook/", BotView.as_view()),
+]
+```
+
 ## Requirements
 
-- Python 3.7+
+- Python 3.10+
 - `requests` library
 
 ## License

@@ -59,4 +59,17 @@ class MessengerClient:
         url = f"https://graph.facebook.com/{self.api_version}/{user_id}"
         params = {"fields": "id,name,picture", "access_token": self.page_access_token}
         response = requests.get(url, params=params)
-        return response.json()
+        try:
+             response.raise_for_status()
+             data = response.json()
+             if "error" in data:  
+                 raise MessengerException(data["error"]["message"])
+             return data
+        except requests.exceptions.HTTPError as e:
+            try:
+                error_data = response.json()
+                if "error" in error_data and "message" in error_data["error"]:
+                    raise MessengerException(error_data["error"]["message"])
+            except ValueError:
+                pass
+            raise MessengerException(str(e))
