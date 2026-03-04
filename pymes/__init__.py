@@ -11,5 +11,5 @@ sender.send("***", action="mark_seen")
 ```"""
 
 from .client import MessengerClient
-from .message import Text, Attachment, QuickReply, GenericTemplate, Element
+from .message import Text, Attachment, QuickReply, GenericTemplate, Button, GenericTemplateElement
 from .exceptions import MessengerException
