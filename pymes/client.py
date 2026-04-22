@@ -57,7 +57,7 @@ class MessengerClient:
     def fetch_user_profile(self, user_id):
         """Fetch user profile from Facebook Graph API"""
         url = f"https://graph.facebook.com/{self.api_version}/{user_id}"
-        params = {"fields": "id,name,picture", "access_token": self.page_access_token}
+        params = {"fields": "id,name,picture,gender", "access_token": self.page_access_token}
         response = requests.get(url, params=params)
         try:
              response.raise_for_status()
