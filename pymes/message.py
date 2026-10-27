@@ -39,6 +39,32 @@ class Attachment(Message):
             }
         }
 
+class Images(Message):
+    """Images message type for sending multiple images grouped together"""
+    def __init__(self, urls: list[str] | str, is_reusable: bool = False):
+        if isinstance(urls, str):
+            urls = [urls]
+        if not urls:
+            raise ValueError("urls list cannot be empty")
+        if len(urls) > 30:
+            raise ValueError("Images message can have maximum 30 images")
+        self.urls = urls
+        self.is_reusable = is_reusable
+
+    def to_dict(self):
+        return {
+            "attachments": [
+                {
+                    "type": "image",
+                    "payload": {
+                        "url": url,
+                        "is_reusable": self.is_reusable
+                    }
+                }
+                for url in self.urls
+            ]
+        }
+
 class QuickReply(Message):
     """Quick reply message type"""
     def __init__(self, text: str, buttons: list[str]):

@@ -16,7 +16,7 @@ pip install pymes-api
 ### Basic Example
 
 ```python
-from pymes import MessengerClient, Text, Attachment
+from pymes import MessengerClient, Text, Attachment, Images
 
 # Initialize the client
 sender = MessengerClient(page_access_token="YOUR_PAGE_ACCESS_TOKEN")
@@ -27,6 +27,9 @@ sender.send(recipient_id="USER_ID", message=Text("Hello, world!"))
 # Send an attachment (Image)
 sender.send("USER_ID", Attachment("image", "https://example.com/image.jpg"))
 
+# Send multiple images grouped together
+sender.send("USER_ID", Images(["https://example.com/image1.jpg", "https://example.com/image2.jpg"]))
+
 # Mark as seen
 sender.send("USER_ID", action="mark_seen")
 ```
@@ -35,6 +38,7 @@ sender.send("USER_ID", action="mark_seen")
 
 - `Text`: Simple text messages.
 - `Attachment`: Images, files, audio, video.
+- `Images`: Multiple images grouped together in a single message.
 - `QuickReply`: Messages with quick reply buttons.
 - `GenericTemplate`: Carousel-like templates with images and buttons.
 
